@@ -97,7 +97,7 @@ require([
       var me = this;
       me.url = me.addSlash(url || this.url);
       return $.ajax($.extend($.extend({}, args), {
-        dataType: me.dataType,
+        dataType: me.dataType || 'json',
         url: me.url + me.usersDir + me.listFilename,
         async: me.async,
         success: function (data) {
@@ -114,7 +114,7 @@ require([
       var me = this;
       var successCallback = args.success;
       $.ajax($.extend(args, {
-        dataType: me.dataType,
+        dataType: me.dataType || 'json',
         url: me.url + me.roomsDir + me.listFilename,
         async: false,
         success: function (data) {
@@ -145,7 +145,7 @@ require([
 
       var roomURL = me.url + me.roomsDir + room.name + '/';
       $.ajax({
-        dataType: me.dataType,
+        dataType: me.dataType || 'json',
         url: roomURL + me.listFilename,
         async: false,
         success: function (logFiles) {
@@ -195,9 +195,10 @@ require([
       $logSection.append($table);
 
       return $.ajax({
-        dataType: me.dataType,
+        dataType: me.dataType || 'json',
         url: roomURL + logFile,
         success: function (logContent) {
+          logContent = logContent.items
           stats.Messages += logContent.length;
           $.each(logContent, function (j, post) {
 
@@ -212,14 +213,14 @@ require([
               post.message = post.message.replace('http: //', 'http://');
             }
 
-            var user_id = post.from ? post.from.user_id : null;
-            var name = 'Anonymous';
+            var user_id = post.from ? post.from.id : null;
+            var name = post.from.name;
             var user = null;
             var mention = null;
             if (user_id) {
               user = me.users[user_id];
               if (user) {
-                name = user.name;
+                name = user.name || name || 'Anonymous';
                 mention = user.mention_name;
               }
             }
