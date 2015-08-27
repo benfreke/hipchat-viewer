@@ -9,10 +9,10 @@ token = JSON.parse(File.read('.token'))['token']
 rooms = JSON.parse(File.read('hipchat_export/rooms/list.json'))['rooms']
 latest_date = Date.today.prev_day
 earliest_date = Date.new(2014, 8, 26)
-rooms.each do |room|
+(earliest_date..latest_date).each do |date|
   break if rate_limit_reached
-  dir = "hipchat_export/rooms/#{room['name']}"
-  (earliest_date..latest_date).each do |date|
+  rooms.each do |room|
+    dir = "hipchat_export/rooms/#{room['name']}"
     url = "https://hipchat.com/v2/room/#{room['room_id']}/history?auth_token=#{token}&date=#{(date.next_day).strftime('%F')}T00:00:00%2B08:00&end-date=#{date.strftime('%F')}T00:00:00%2B08:00"
     response = HTTParty.get(url)
     json = JSON.parse(response.body)
@@ -28,6 +28,9 @@ rooms.each do |room|
       f.write(JSON.pretty_generate json)
     end
   end
+end
+Dir.glob('hipchat_export/rooms/**/').each do |dir|
+  next if 'hipchat_export/rooms/' == dir
   puts "generating #{dir}/list.json"
   File.open("#{dir}/list.json", 'w') do |f|
     f.write(JSON.pretty_generate Dir.entries(dir)[2..-2])
