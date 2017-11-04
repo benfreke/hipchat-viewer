@@ -27,5 +27,7 @@ It will automatically load logs from the `hipchat_export` folder if found, other
 And load the logs from here:
 
     http://localhost/some/other/path/hipchat_export
+    
+You will need to manually move the json files around, this isn't a production ready tool.
 
-![image](https://raw.github.com/zh3w4ng/hipchat-viewer/master/help/screenshot.png)
+![image](https://raw.github.com/benfreke/hipchat-viewer/master/help/screenshot.png)

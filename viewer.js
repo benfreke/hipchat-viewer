@@ -102,7 +102,7 @@ require([
         async: me.async,
         success: function (data) {
           me.users = {};
-          $.each(data.users, function (i, user) {
+          $.each(data, function (i, user) {
             me.users[user.user_id] = user;
           });
           me.loadRooms(args);
@@ -121,12 +121,12 @@ require([
           if (successCallback) {
             successCallback(data);
           }
-          me.rooms = data.rooms;
+          me.rooms = data;
           me.$sidebar.html('');
           $.each(me.rooms, function (i, room) {
-            me.addRoom(room);
+            me.addRoom(room.Room);
           });
-          stats.Rooms = data.rooms.length;
+          stats.Rooms = data.length;
           renderStats();
         }
       }));
@@ -134,7 +134,6 @@ require([
     },
     addRoom: function (room) {
       var me = this;
-
       me.$sidebar.append($('<li><a href="#room-' + room.room_id + '"><i class="icon-chevron-right"></i> ' + room.name + '</a></li>'));
       var $roomSection = $('<section id="room-' + room.room_id + '"></section>');
       var $header = $('<div class="page-header"><h1>' + room.name + '</h1><div>');
